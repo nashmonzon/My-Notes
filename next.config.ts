@@ -1,7 +1,17 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  webpack: (config) => {
+    // Configuración simplificada para Lit
+    config.module.rules.push({
+      test: /\.m?js$/,
+      include: /node_modules\/lit-element|lit-html|@lit|lit/,
+      resolve: {
+        fullySpecified: false,
+      },
+    });
 
-const nextConfig: NextConfig = {
-  /* config options here */
+    return config;
+  },
 };
 
 export default nextConfig;
