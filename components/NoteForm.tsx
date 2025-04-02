@@ -2,8 +2,6 @@
 import { useState, useEffect } from "react";
 import type React from "react";
 
-// import { PlusCircle, Edit3 } from "lucide-react";
-
 type Props = {
   onSubmit: (data: { title: string; content: string }) => void;
   initialData?: { title: string; content: string };

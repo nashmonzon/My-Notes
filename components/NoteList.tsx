@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { NoteItem } from "./NoteItem";
 
 type Nota = {
@@ -15,12 +16,33 @@ type Props = {
 
 export const NoteList = ({ notas, onEdit, onDelete }: Props) => {
   return (
-    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4">
-      {notas.map((nota) => (
-        <li key={nota.id}>
-          <NoteItem nota={nota} onEdit={onEdit} onDelete={onDelete} />
-        </li>
-      ))}
-    </ul>
+    <motion.ul
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4"
+      layout
+    >
+      <AnimatePresence mode="popLayout">
+        {notas.map((nota) => (
+          <motion.li
+            key={nota.id}
+            layout
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{
+              opacity: 0,
+              scale: 0.8,
+              transition: { duration: 0.5 },
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+              opacity: { duration: 0.5 },
+            }}
+          >
+            <NoteItem nota={nota} onEdit={onEdit} onDelete={onDelete} />
+          </motion.li>
+        ))}
+      </AnimatePresence>
+    </motion.ul>
   );
 };

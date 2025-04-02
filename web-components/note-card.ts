@@ -13,7 +13,7 @@ export class NoteCard extends LitElement {
     :host {
       display: block;
       width: 100%;
-      // height: 280px;
+      // height: 240px; /* Altura fija para todas las tarjetas */
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(12px);
       border-radius: 24px;
@@ -42,33 +42,40 @@ export class NoteCard extends LitElement {
     }
 
     .card-content {
-      padding: 2rem;
       display: flex;
       flex-direction: column;
       height: 100%;
+      padding: 1.5rem;
     }
 
     h2 {
-      font-size: 1.375rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: #111827;
-      margin: 0 0 0.75rem 0;
+      margin: 0 0 0.5rem 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       letter-spacing: -0.01em;
+      flex-shrink: 0;
+    }
+
+    .content-wrapper {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
     }
 
     p {
       color: #4b5563;
-      line-height: 1.6;
+      line-height: 1.5;
       margin: 0;
-      overflow: hidden;
+      font-size: 0.875rem;
       display: -webkit-box;
-      -webkit-line-clamp: 4;
+      -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
-      font-size: 0.9375rem;
-      flex: 1;
+      overflow: hidden;
       position: relative;
     }
 
@@ -77,66 +84,38 @@ export class NoteCard extends LitElement {
       position: absolute;
       bottom: 0;
       right: 0;
-      width: 30%;
-      height: 1.6em;
-      background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0),
-        rgba(255, 255, 255, 0.9) 50%
-      );
+      width: 100%;
+      height: 1.5em;
       pointer-events: none;
+    }
+
+    .footer {
+      flex-shrink: 0;
+      margin-top: auto;
     }
 
     .metadata {
       color: #6b7280;
-      font-size: 0.8125rem;
-      margin-top: 1rem;
+      font-size: 0.75rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      flex-shrink: 0;
+      margin-bottom: 0.75rem;
     }
 
     .actions {
       display: flex;
       justify-content: flex-end;
-      gap: 0.75rem;
-      margin-top: 1rem;
-      flex-shrink: 0;
+      gap: 0.5rem;
     }
 
     button {
-      padding: 0.625rem 1.25rem;
+      padding: 0.5rem 1rem;
       border-radius: 12px;
       cursor: pointer;
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       border: none;
       font-weight: 600;
       transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    button::after {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
-      background-repeat: no-repeat;
-      background-position: 50%;
-      transform: scale(10, 10);
-      opacity: 0;
-      transition: transform 0.3s, opacity 0.5s;
-    }
-
-    button:active::after {
-      transform: scale(0, 0);
-      opacity: 0.3;
-      transition: 0s;
     }
 
     button.edit {
@@ -147,7 +126,6 @@ export class NoteCard extends LitElement {
     button.delete {
       background: #4f46e5;
       color: white;
-      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
     }
 
     button:hover {
@@ -167,13 +145,17 @@ export class NoteCard extends LitElement {
     return html`
       <div class="card-content">
         <h2>${this.title}</h2>
-        <p>${this.content}</p>
-        <div class="metadata">
-          Última edición: ${new Date(this.updatedat).toLocaleString()}
+        <div class="content-wrapper">
+          <p>${this.content}</p>
         </div>
-        <div class="actions">
-          <button class="edit" @click=${this.onEdit}>Editar</button>
-          <button class="delete" @click=${this.onDelete}>Eliminar</button>
+        <div class="footer">
+          <div class="metadata">
+            Última edición: ${new Date(this.updatedat).toLocaleString()}
+          </div>
+          <div class="actions">
+            <button class="edit" @click=${this.onEdit}>Editar</button>
+            <button class="delete" @click=${this.onDelete}>Eliminar</button>
+          </div>
         </div>
       </div>
     `;
