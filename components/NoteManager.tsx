@@ -3,52 +3,62 @@
 import { useState, useTransition } from "react";
 import { NoteForm } from "./NoteForm";
 import { NoteList } from "./NoteList";
-import { Nota } from "@/types/utils";
+import type { Note } from "@/types/utils";
 import { createNote, updateNote, deleteNote } from "@/app/actions/notes";
 
 type Props = {
-  initialNotes: Nota[];
+  initialNotes: Note[];
 };
 
 export const NoteManager = ({ initialNotes }: Props) => {
-  const [notas, setNotas] = useState<Nota[]>(initialNotes);
-  const [editandoId, setEditandoId] = useState<number | null>(null);
+  const [notes, setNotes] = useState<Note[]>(initialNotes);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({ title: "", content: "" });
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (data: { title: string; content: string }) => {
     startTransition(async () => {
       try {
-        if (editandoId) {
-          const updated = await updateNote(editandoId, data);
-          setNotas((prev) =>
-            prev.map((n) => (n.id === editandoId ? updated : n))
+        if (editingId) {
+          const updated = await updateNote(editingId, data);
+          setNotes((prev) =>
+            prev.map((n) => (n.id === editingId ? updated : n))
           );
+          setEditingId(null);
+          setFormData({ title: "", content: "" });
         } else {
-          const nueva = await createNote(data);
-          setNotas((prev) => [{ ...nueva, id: Number(nueva.id) }, ...prev]);
+          const newNote = await createNote(data);
+          setNotes((prev) => [{ ...newNote, id: Number(newNote.id) }, ...prev]);
         }
-
-        setFormData({ title: "", content: "" });
-        setEditandoId(null);
       } catch (err) {
         console.error("Error:", err);
       }
     });
   };
 
-  const handleEdit = (nota: Nota) => {
-    setFormData({ title: nota.title, content: nota.content });
-    setEditandoId(nota.id);
+  const handleEdit = (note: Note) => {
+    startTransition(async () => {
+      try {
+        const updated = await updateNote(note.id, {
+          title: note.title,
+          content: note.content,
+        });
+        setNotes((prev) => prev.map((n) => (n.id === note.id ? updated : n)));
+      } catch (err) {
+        console.error("Error updating note:", err);
+      }
+    });
   };
 
   const handleDelete = (id: number) => {
-    if (!confirm("Are you sure you want to delete this note?")) return;
-
     startTransition(async () => {
       try {
         await deleteNote(id);
-        setNotas((prev) => prev.filter((nota) => nota.id !== id));
+        setNotes((prev) => prev.filter((note) => note.id !== id));
+        if (editingId === id) {
+          setEditingId(null);
+          setFormData({ title: "", content: "" });
+        }
       } catch (err) {
         console.error("Error deleting note:", err);
       }
@@ -57,14 +67,20 @@ export const NoteManager = ({ initialNotes }: Props) => {
 
   return (
     <>
-      {isPending && <div className="text-sm text-indigo-600">Saving...</div>}
+      {isPending && (
+        <div className="fixed top-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+          Saving...
+        </div>
+      )}
       <NoteForm
         onSubmit={handleSubmit}
         initialData={formData}
-        modoEdicion={!!editandoId}
+        modoEdicion={!!editingId}
       />
 
-      <NoteList notas={notas} onEdit={handleEdit} onDelete={handleDelete} />
+      <div className="max-w-7xl mx-auto">
+        <NoteList notes={notes} onEdit={handleEdit} onDelete={handleDelete} />
+      </div>
     </>
   );
 };

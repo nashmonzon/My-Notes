@@ -16,7 +16,7 @@ export async function createNote(data: { title: string; content: string }) {
   `);
   const info = stmt.run(nuevaNota);
 
-  revalidatePath("/"); // fuerza a recargar datos si estás usando fetch desde server
+  revalidatePath("/");
   return { id: info.lastInsertRowid, ...nuevaNota };
 }
 

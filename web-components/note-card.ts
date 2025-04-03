@@ -6,14 +6,14 @@ export class NoteCard extends LitElement {
   @property({ type: String }) declare title: string;
   @property({ type: String }) declare content: string;
   @property({ type: String }) declare updatedat: string;
-  @property({ type: String }) declare onEdit: () => void;
-  @property({ type: String }) declare onDelete: () => void;
+  @property({ type: Function }) declare onDelete: () => void;
+  @property({ type: Function }) declare onClick: () => void;
 
   static styles = css`
     :host {
       display: block;
       width: 100%;
-      // height: 240px; /* Altura fija para todas las tarjetas */
+
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(12px);
       border-radius: 24px;
@@ -22,6 +22,7 @@ export class NoteCard extends LitElement {
       position: relative;
       overflow: hidden;
       transition: all 0.3s ease;
+      cursor: pointer;
     }
 
     :host::before {
@@ -86,6 +87,11 @@ export class NoteCard extends LitElement {
       right: 0;
       width: 100%;
       height: 1.5em;
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 1)
+      );
       pointer-events: none;
     }
 
@@ -116,11 +122,7 @@ export class NoteCard extends LitElement {
       border: none;
       font-weight: 600;
       transition: all 0.2s ease;
-    }
-
-    button.edit {
-      background: rgba(79, 70, 229, 0.08);
-      color: #4f46e5;
+      z-index: 10;
     }
 
     button.delete {
@@ -132,18 +134,33 @@ export class NoteCard extends LitElement {
       transform: translateY(-2px);
     }
 
-    button.edit:hover {
-      background: rgba(79, 70, 229, 0.12);
-    }
-
     button.delete:hover {
       background: #4338ca;
     }
   `;
 
+  handleCardClick(e: Event) {
+    const target = e.target as HTMLElement;
+    if (target.tagName === "BUTTON") {
+      e.stopPropagation();
+      return;
+    }
+
+    if (this.onClick) {
+      this.onClick();
+    }
+  }
+
+  handleDelete(e: Event) {
+    e.stopPropagation();
+    if (this.onDelete) {
+      this.onDelete();
+    }
+  }
+
   render() {
     return html`
-      <div class="card-content">
+      <div class="card-content" @click=${this.handleCardClick}>
         <h2>${this.title}</h2>
         <div class="content-wrapper">
           <p>${this.content}</p>
@@ -153,8 +170,7 @@ export class NoteCard extends LitElement {
             Última edición: ${new Date(this.updatedat).toLocaleString()}
           </div>
           <div class="actions">
-            <button class="edit" @click=${this.onEdit}>Editar</button>
-            <button class="delete" @click=${this.onDelete}>Eliminar</button>
+            <button class="delete" @click=${this.handleDelete}>Eliminar</button>
           </div>
         </div>
       </div>

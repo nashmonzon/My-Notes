@@ -6,8 +6,8 @@ import "@/app/globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Notas | Keyless Style",
-  description: "App moderna para tomar notas",
+  title: "Notes | Keyless Style",
+  description: "Modern note-taking app",
 };
 
 export default function RootLayout({
@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="en">
       <body className={`${inter.className} bg-white min-h-screen`}>
         {children}
       </body>
