@@ -91,8 +91,8 @@ export const DeleteConfirmModal = ({
                 </button>
                 <button
                   onClick={handleConfirm}
-                  className="px-5 py-2.5 rounded-xl bg-red-500 
-                    text-white font-medium hover:bg-red-600 
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-500 to-red-600
+                    text-white font-medium hover:shadow-lg hover:shadow-red-500/25
                     active:scale-[0.98] transition-all duration-200"
                 >
                   Delete

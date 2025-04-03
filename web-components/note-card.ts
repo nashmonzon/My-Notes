@@ -167,10 +167,10 @@ export class NoteCard extends LitElement {
         </div>
         <div class="footer">
           <div class="metadata">
-            Última edición: ${new Date(this.updatedat).toLocaleString()}
+            Last edited: ${new Date(this.updatedat).toLocaleString()}
           </div>
           <div class="actions">
-            <button class="delete" @click=${this.handleDelete}>Eliminar</button>
+            <button class="delete" @click=${this.handleDelete}>Delete</button>
           </div>
         </div>
       </div>

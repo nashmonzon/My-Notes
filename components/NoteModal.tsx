@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, AlertCircle } from "lucide-react";
 
 type Props = {
-  nota: {
+  note: {
     id: number;
     title: string;
     content: string;
@@ -15,24 +15,41 @@ type Props = {
   onSave: (id: number, data: { title: string; content: string }) => void;
 };
 
-export const NoteModal = ({ nota, isOpen, onClose, onSave }: Props) => {
-  const [title, setTitle] = useState(nota.title);
-  const [content, setContent] = useState(nota.content);
+export const NoteModal = ({ note, isOpen, onClose, onSave }: Props) => {
+  const [title, setTitle] = useState(note.title);
+  const [content, setContent] = useState(note.content);
   const [hasChanges, setHasChanges] = useState(false);
+  const [errors, setErrors] = useState({ title: false, content: false });
+  const [submitted, setSubmitted] = useState(false);
 
+  // Actualizar los estados cuando cambia la nota
   useEffect(() => {
     if (isOpen) {
-      setTitle(nota.title);
-      setContent(nota.content);
+      setTitle(note.title);
+      setContent(note.content);
       setHasChanges(false);
+      setErrors({ title: false, content: false });
+      setSubmitted(false);
     }
-  }, [isOpen, nota]);
+  }, [isOpen, note]);
 
   const handleSave = () => {
-    if (title.trim() && content.trim()) {
-      onSave(nota.id, { title, content });
-      onClose();
+    setSubmitted(true);
+
+    // Validar campos
+    const newErrors = {
+      title: !title.trim(),
+      content: !content.trim(),
+    };
+
+    setErrors(newErrors);
+
+    if (newErrors.title || newErrors.content) {
+      return;
     }
+
+    onSave(note.id, { title, content });
+    onClose();
   };
 
   const handleClose = () => {
@@ -79,30 +96,74 @@ export const NoteModal = ({ nota, isOpen, onClose, onSave }: Props) => {
               </div>
 
               <div className="flex flex-col gap-4 flex-grow">
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                    setHasChanges(true);
-                  }}
-                  className="w-full p-3 text-lg border border-gray-200 rounded-xl 
-                    focus:outline-none focus:ring-2 focus:ring-indigo-500/20 
-                    focus:border-indigo-500 text-gray-800 font-medium"
-                  placeholder="Note title"
-                />
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <label className="text-sm font-medium text-gray-700 flex items-center gap-1">
+                      Title <span className="text-indigo-500">*</span>
+                    </label>
+                    {submitted && errors.title && (
+                      <span className="text-xs text-red-500 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> Required field
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                      setHasChanges(true);
+                      if (submitted) {
+                        setErrors((prev) => ({
+                          ...prev,
+                          title: !e.target.value.trim(),
+                        }));
+                      }
+                    }}
+                    className={`w-full p-3 text-lg ${
+                      submitted && errors.title
+                        ? "border-red-300 focus:ring-red-500/20 focus:border-red-500"
+                        : "border-gray-200 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    } border rounded-xl 
+                      focus:outline-none focus:ring-2 
+                      text-gray-800 font-medium`}
+                    placeholder="Note title"
+                  />
+                </div>
 
-                <textarea
-                  value={content}
-                  onChange={(e) => {
-                    setContent(e.target.value);
-                    setHasChanges(true);
-                  }}
-                  className="w-full p-4 min-h-[200px] text-base border border-gray-200 rounded-xl 
-                    focus:outline-none focus:ring-2 focus:ring-indigo-500/20 
-                    focus:border-indigo-500 text-gray-700 resize-none flex-grow"
-                  placeholder="Note content"
-                />
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <label className="text-sm font-medium text-gray-700 flex items-center gap-1">
+                      Content <span className="text-indigo-500">*</span>
+                    </label>
+                    {submitted && errors.content && (
+                      <span className="text-xs text-red-500 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> Required field
+                      </span>
+                    )}
+                  </div>
+                  <textarea
+                    value={content}
+                    onChange={(e) => {
+                      setContent(e.target.value);
+                      setHasChanges(true);
+                      if (submitted) {
+                        setErrors((prev) => ({
+                          ...prev,
+                          content: !e.target.value.trim(),
+                        }));
+                      }
+                    }}
+                    className={`w-full p-4 min-h-[200px] text-base ${
+                      submitted && errors.content
+                        ? "border-red-300 focus:ring-red-500/20 focus:border-red-500"
+                        : "border-gray-200 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    } border rounded-xl 
+                      focus:outline-none focus:ring-2 
+                      text-gray-700 resize-none flex-grow`}
+                    placeholder="Note content"
+                  />
+                </div>
               </div>
 
               <div className="flex justify-end gap-3 mt-6">
@@ -115,14 +176,24 @@ export const NoteModal = ({ nota, isOpen, onClose, onSave }: Props) => {
                 </button>
                 <button
                   onClick={handleSave}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 
+                  className={`px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 
                     text-white font-medium hover:shadow-lg hover:shadow-indigo-500/25 
-                    active:scale-[0.98] transition-all duration-200"
+                    active:scale-[0.98] transition-all duration-200
+                    ${
+                      !title.trim() || !content.trim()
+                        ? "opacity-70 cursor-not-allowed"
+                        : ""
+                    }`}
                   disabled={!title.trim() || !content.trim()}
                 >
                   Save changes
                 </button>
               </div>
+
+              <p className="text-xs text-gray-500 mt-3 text-center">
+                The fields marked with{" "}
+                <span className="text-indigo-500">*</span> are required
+              </p>
             </div>
           </motion.div>
         </div>

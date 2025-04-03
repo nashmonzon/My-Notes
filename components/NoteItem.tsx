@@ -15,7 +15,7 @@ type Note = {
 };
 
 type Props = {
-  nota: Note;
+  note: Note;
   onEdit: (nota: Note) => void;
   onDelete: (id: number) => void;
 };
@@ -26,7 +26,7 @@ const NoteCard = createComponent({
   elementClass: NoteCardWC,
 });
 
-export const NoteItem = ({ nota, onEdit, onDelete }: Props) => {
+export const NoteItem = ({ note, onEdit, onDelete }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -39,28 +39,28 @@ export const NoteItem = ({ nota, onEdit, onDelete }: Props) => {
   };
 
   const handleConfirmDelete = () => {
-    onDelete(nota.id);
+    onDelete(note.id);
     setIsDeleteModalOpen(false);
   };
 
   const handleSave = (id: number, data: { title: string; content: string }) => {
-    onEdit({ ...nota, ...data });
+    onEdit({ ...note, ...data });
   };
 
   return (
     <>
       <div className="h-[240px] w-full">
         <NoteCard
-          title={nota?.title}
-          content={nota?.content}
-          updatedat={nota?.updatedAt}
+          title={note?.title}
+          content={note?.content}
+          updatedat={note?.updatedAt}
           onDelete={handleDeleteClick}
           onClick={handleCardClick}
         />
       </div>
 
       <NoteModal
-        nota={nota}
+        note={note}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSave}
@@ -70,7 +70,7 @@ export const NoteItem = ({ nota, onEdit, onDelete }: Props) => {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        title={nota.title}
+        title={note.title}
       />
     </>
   );

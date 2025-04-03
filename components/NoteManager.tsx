@@ -5,6 +5,7 @@ import { NoteForm } from "./NoteForm";
 import { NoteList } from "./NoteList";
 import type { Note } from "@/types/utils";
 import { createNote, updateNote, deleteNote } from "@/app/actions/notes";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   initialNotes: Note[];
@@ -68,14 +69,15 @@ export const NoteManager = ({ initialNotes }: Props) => {
   return (
     <>
       {isPending && (
-        <div className="fixed top-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+        <div className="fixed top-4 right-4 bg-white text-indigo-600 px-4 py-2 rounded-lg shadow-lg z-50 flex items-center gap-2">
+          <Loader2 className="w-4 h-4 animate-spin" />
           Saving...
         </div>
       )}
       <NoteForm
         onSubmit={handleSubmit}
         initialData={formData}
-        modoEdicion={!!editingId}
+        editMode={!!editingId}
       />
 
       <div className="max-w-7xl mx-auto">
