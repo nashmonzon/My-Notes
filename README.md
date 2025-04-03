@@ -1,6 +1,6 @@
 # My Notes 📝
 
-![My Notes App Preview](My-notesImg.png)
+![My Notes App Preview](./My-NotesImg.png)
 
 A modern, elegant, and fast note-taking web app built with **Next.js 15**, **TypeScript**, **Tailwind CSS**, **SQLite**, and **Lit Web Components**.  
 Designed for quick note management with a clean and animated UI.
