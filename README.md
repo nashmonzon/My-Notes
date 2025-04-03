@@ -96,7 +96,6 @@ This app uses a local SQLite database.
 By default, the database file will be created automatically at:
 
 ```bash
-Copy
 /db/sqlite.db
 ```
 If it doesn’t exist, the schema will be initialized automatically using better-sqlite3.
@@ -104,7 +103,6 @@ If it doesn’t exist, the schema will be initialized automatically using better
 ## 🧪 Useful Scripts
 
 ```bash
-Copy
 npm run dev      # Start the dev server
 npm run build    # Build for production
 npm run start    # Start the production server
