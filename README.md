@@ -98,15 +98,24 @@ Open http://localhost:3000 in your browser.
 
 ## 💾 Database Setup (SQLite)
 
-This app uses a local SQLite database.
+This app uses a local SQLite database via better-sqlite3.
 
-By default, the database file will be created automatically at:
+On first run, if the database file doesn't exist, it will be automatically created at:
 
 ```bash
 /db/sqlite.db
 ```
 
-If it doesn't exist, the schema will be initialized automatically using better-sqlite3.
+The schema (table structure) is also created automatically, so no manual setup is required.
+
+⚠️ This file is ignored via .gitignore and should not be committed to version control.
+
+## Database
+
+This project uses a local SQLite database.  
+The file `db/notes.db` is created automatically on first run if it doesn't exist.
+
+There is no need to commit this file. Make sure it's ignored in `.gitignore`.
 
 ## 🧪 Useful Scripts
 
