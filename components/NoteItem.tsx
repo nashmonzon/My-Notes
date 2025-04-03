@@ -3,9 +3,9 @@ import { useState } from "react";
 import { NoteCard as NoteCardWC } from "../web-components/note-card";
 import { createComponent } from "@lit/react";
 import { NoteModal } from "./NoteModal";
-
-import React from "react";
 import { DeleteConfirmModal } from "./DeleteConfirmModal";
+import { motion } from "framer-motion";
+import React from "react";
 
 type Note = {
   id: number;
@@ -16,7 +16,7 @@ type Note = {
 
 type Props = {
   note: Note;
-  onEdit: (nota: Note) => void;
+  onEdit: (note: Note) => void;
   onDelete: (id: number) => void;
 };
 
@@ -29,6 +29,7 @@ const NoteCard = createComponent({
 export const NoteItem = ({ note, onEdit, onDelete }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleCardClick = () => {
     setIsModalOpen(true);
@@ -49,7 +50,13 @@ export const NoteItem = ({ note, onEdit, onDelete }: Props) => {
 
   return (
     <>
-      <div className="h-[240px] w-full">
+      <motion.div
+        className="h-[240px] w-full relative"
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+        whileHover={{ y: -5 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      >
         <NoteCard
           title={note?.title}
           content={note?.content}
@@ -57,7 +64,18 @@ export const NoteItem = ({ note, onEdit, onDelete }: Props) => {
           onDelete={handleDeleteClick}
           onClick={handleCardClick}
         />
-      </div>
+
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute top-2 right-2 bg-indigo-100 rounded-full p-1"
+          >
+            <span className="block w-2 h-2 rounded-full bg-indigo-500"></span>
+          </motion.div>
+        )}
+      </motion.div>
 
       <NoteModal
         note={note}
