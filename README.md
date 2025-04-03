@@ -78,7 +78,7 @@ Designed for quick note management with a clean and animated UI.
 ### 1. Clone the repository
 
 ```bash
-git clone git@github.com:your-username/My-Notes.git
+git@github.com:nashmonzon/My-Notes.git
 cd My-Notes
 ```
 
