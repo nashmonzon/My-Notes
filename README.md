@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# My Notes 📝
 
-## Getting Started
+A modern, elegant, and fast note-taking web app built with **Next.js 15**, **TypeScript**, **Tailwind CSS**, **SQLite**, and **Lit Web Components**.  
+Designed for quick note management with a clean and animated UI.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- ✅ Server-side rendering using **Next.js App Router**
+- ✅ **React + Lit** interoperability (custom Web Component for each note)
+- ✅ Animated note interactions with **Framer Motion**
+- ✅ Responsive grid layout with **Tailwind CSS**
+- ✅ Create, edit, delete notes
+- ✅ Notes stored in a local **SQLite** database (via `better-sqlite3`)
+- ✅ Styled with custom gradients and glassmorphism
+
+---
+
+## 🧱 Tech Stack
+
+- **Next.js 15 (App Router)**
+- **React 18**
+- **TypeScript**
+- **Tailwind CSS**
+- **Framer Motion**
+- **Lucide Icons**
+- **SQLite** (via `better-sqlite3`)
+- **Lit** for Web Components
+
+---
+
+## 📁 Folder Structure (Simplified)
+```bash
+├── app/ → App Router structure
+│ ├── actions/ → Server Actions for fetching/mutating notes
+│ │ ├── get-notes.ts → Server-side GET logic
+│ │ └── notes.ts → createNote, updateNote, deleteNote
+│ ├── api/
+│ │ └── notes/ → API Routes (legacy or optional)
+│ │ ├── route.ts → GET, POST
+│ │ └── [id]/route.ts→ PUT, DELETE
+│ ├── layout.tsx → Root layout with header/footer
+│ ├── page.tsx → Main homepage (uses SSR)
+│ └── globals.css → Global Tailwind + custom styles
+│
+├── components/ → React components
+│ ├── AppHeader.tsx → App top navbar
+│ ├── NoteForm.tsx → Note creation/editing form
+│ ├── NoteList.tsx → Animated list of notes (grid)
+│ ├── NoteItem.tsx → Wrapper for each note card (Web Component)
+│ └── NoteManager.tsx → Handles note logic and state
+│
+├── web-components/ → Lit Web Components
+│ └── note-card.ts → <note-card> component for each note
+│
+├── db/ → Local SQLite setup
+│ └── index.ts → Initializes and exposes db connection
+│
+├── public/ → Static assets (if any)
+│
+├── types/ → TypeScript types
+│ └── utils.ts → Note type definition
+│
+├── README.md
+├── package.json
+├── tsconfig.json
+└── next.config.js
+```
+---
+
+## 🛠️ Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone git@github.com:your-username/My-Notes.git
+cd My-Notes
+```
+### 2. Install dependencies
+
+```bash
+npm install
+```
+### 3. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Open http://localhost:3000 in your browser.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 💾 Database Setup (SQLite)
+This app uses a local SQLite database.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+By default, the database file will be created automatically at:
 
-## Learn More
+```bash
+/db/sqlite.db
+```
+If it doesn’t exist, the schema will be initialized automatically using better-sqlite3.
 
-To learn more about Next.js, take a look at the following resources:
+## 🧪 Useful Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run dev      # Start the dev server
+npm run build    # Build for production
+npm run start    # Start the production server
+```
+## 🙌 Credits
+Created with ❤️ using Next.js, React, and Lit.
+Designed with modern UI/UX in mind and deployed as a clean, minimal notes app.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
