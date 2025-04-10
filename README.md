@@ -60,7 +60,7 @@ Designed for quick note management with a clean and animated UI.
 ├── db/ → Local SQLite setup
 │ └── index.ts → Initializes and exposes db connection
 │
-├── public/ → Static assets (if any)
+├── public/ → Static assets
 │
 ├── types/ → TypeScript types
 │ └── utils.ts → Note type definition
