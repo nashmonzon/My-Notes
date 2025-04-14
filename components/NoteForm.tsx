@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type React from "react";
 import { PlusCircle, Sparkles, AlertCircle } from "lucide-react";
 
@@ -14,14 +14,6 @@ export const NoteForm = ({ onSubmit, initialData, editMode }: Props) => {
   const [content, setContent] = useState(initialData?.content || "");
   const [isFocused, setIsFocused] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
-  useEffect(() => {
-    if (initialData) {
-      setTitle(initialData.title);
-      setContent(initialData.content);
-      setSubmitted(false);
-    }
-  }, [initialData]);
 
   const titleError = submitted && !title.trim();
   const contentError = submitted && !content.trim();

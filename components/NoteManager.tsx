@@ -12,7 +12,6 @@ type Props = {
 };
 
 export const NoteManager = ({ initialNotes }: Props) => {
-  const [notes, setNotes] = useState<Note[]>(initialNotes);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({ title: "", content: "" });
   const [isPending, startTransition] = useTransition();
@@ -21,15 +20,11 @@ export const NoteManager = ({ initialNotes }: Props) => {
     startTransition(async () => {
       try {
         if (editingId) {
-          const updated = await updateNote(editingId, data);
-          setNotes((prev) =>
-            prev.map((n) => (n.id === editingId ? updated : n))
-          );
+          await updateNote(editingId, data);
           setEditingId(null);
           setFormData({ title: "", content: "" });
         } else {
-          const newNote = await createNote(data);
-          setNotes((prev) => [{ ...newNote, id: Number(newNote.id) }, ...prev]);
+          await createNote(data);
         }
       } catch (err) {
         console.error("Error:", err);
@@ -40,11 +35,10 @@ export const NoteManager = ({ initialNotes }: Props) => {
   const handleEdit = (note: Note) => {
     startTransition(async () => {
       try {
-        const updated = await updateNote(note.id, {
+        await updateNote(note.id, {
           title: note.title,
           content: note.content,
         });
-        setNotes((prev) => prev.map((n) => (n.id === note.id ? updated : n)));
       } catch (err) {
         console.error("Error updating note:", err);
       }
@@ -55,7 +49,6 @@ export const NoteManager = ({ initialNotes }: Props) => {
     startTransition(async () => {
       try {
         await deleteNote(id);
-        setNotes((prev) => prev.filter((note) => note.id !== id));
         if (editingId === id) {
           setEditingId(null);
           setFormData({ title: "", content: "" });
@@ -81,7 +74,11 @@ export const NoteManager = ({ initialNotes }: Props) => {
       />
 
       <div className="max-w-7xl mx-auto">
-        <NoteList notes={notes} onEdit={handleEdit} onDelete={handleDelete} />
+        <NoteList
+          notes={initialNotes}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       </div>
     </>
   );
